@@ -4,14 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plantilla — Ñemones Basquet Club</title>
+<meta name="description" content="Plantilla de Ñemones Basquet Club: jugadores, dorsales y estadísticas de la temporada.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
 <nav class="topnav">
   <div class="wrap">
     <a href="index.html" class="brand">
-      <svg class="crest" viewBox="0 0 40 40" style="color:var(--accent)">
+      <svg class="crest" viewBox="0 0 40 40" aria-hidden="true">
         <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="2"/>
         <path d="M6 6c8 8 8 20 0 28M34 6c-8 8-8 20 0 28M1 20h38" stroke="currentColor" stroke-width="1" fill="none" opacity="0.55"/>
         <text x="20" y="27" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="19" fill="currentColor">Ñ</text>
@@ -28,8 +35,10 @@
   </div>
 </nav>
 
-<header class="hero" style="padding-bottom:0">
-  <div class="wrap" style="grid-template-columns:1fr; padding-bottom:2.5rem">
+<main id="contenido">
+
+<header class="hero compact">
+  <div class="wrap">
     <div>
       <p class="kicker">Primera plantilla</p>
       <h1>NUESTROS<br>JUGADORES</h1>
@@ -38,11 +47,13 @@
   </div>
 </header>
 
-<section style="padding-top:2.5rem">
+<section class="tight">
   <div class="wrap">
     <div class="roster" id="roster"></div>
   </div>
 </section>
+
+</main>
 
 <footer>
   <div class="wrap">
@@ -51,14 +62,15 @@
   </div>
 </footer>
 
-<div class="modal-overlay" id="modal-jugador" role="dialog" aria-modal="true" aria-label="Estadísticas del jugador">
-  <div class="modal-box">
-    <button class="modal-close" id="modal-jugador-close" aria-label="Cerrar">✕</button>
+<div class="modal-overlay" id="modal-jugador">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-jugador-titulo">
+    <button type="button" class="modal-close" id="modal-jugador-close" aria-label="Cerrar">✕</button>
     <div id="modal-jugador-body"></div>
   </div>
 </div>
 
 <script src="js/data.js"></script>
+<script src="js/utils.js"></script>
 <script src="js/ilustraciones.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/plantilla.js"></script>
