@@ -2,54 +2,66 @@
    ÑEMONES BASQUET CLUB — página de plantilla
    ============================================================ */
 
+const STATS_JUGADOR = [
+  ["min", "Minutos"],
+  ["pts", "Puntos"],
+  ["reb", "Rebotes"],
+  ["ast", "Asistencias"],
+  ["rob", "Robos"],
+  ["tap", "Tapones"],
+  ["mates", "Mates"],
+  ["mm", "+/-"],
+  ["per", "Pérdidas"],
+  ["tc", "Tiros de campo", "%"],
+  ["t3", "Triples", "%"],
+  ["tl", "Tiros libres", "%"],
+];
+
 function insigniasHTML(j) {
   const mvp = j.mvp ? `<span class="badge mvp">👑 MVP</span>` : "";
-  const ins = j.insignia ? `<span class="badge">${j.insignia}</span>` : "";
+  const ins = j.insignia ? `<span class="badge">${escaparHTML(j.insignia)}</span>` : "";
   return mvp + ins;
 }
 
-function abrirModalJugador(jugador, index) {
-  const overlay = document.getElementById("modal-jugador");
-  const cuerpo = document.getElementById("modal-jugador-body");
-  if (!overlay || !cuerpo) return;
-
-  const s = jugador.stats;
-  cuerpo.innerHTML = `
-    <div class="modal-avatar">${avatarJugadorSVG(jugador, index)}</div>
-    <div class="modal-info">
-      <p class="kicker" style="margin-bottom:0.2em">${jugador.posicion} · ${jugador.altura}</p>
-      <p class="badges" style="margin:0 0 0.4rem">${insigniasHTML(jugador)}</p>
-      <h2 style="margin-bottom:0.1em">${jugador.nombre}</h2>
-      <p class="modal-bio">${jugador.bio}</p>
-      ${jugador.hazanas ? `<ul class="hazanas">${jugador.hazanas.map((h) => `<li>${h}</li>`).join("")}</ul>` : ""}
-      <div class="stats-grid">
-        <div><span class="stat-num">${s.min}</span><span class="stat-label">Minutos</span></div>
-        <div><span class="stat-num">${s.pts}</span><span class="stat-label">Puntos</span></div>
-        <div><span class="stat-num">${s.reb}</span><span class="stat-label">Rebotes</span></div>
-        <div><span class="stat-num">${s.ast}</span><span class="stat-label">Asistencias</span></div>
-        <div><span class="stat-num">${s.rob}</span><span class="stat-label">Robos</span></div>
-        <div><span class="stat-num">${s.tap}</span><span class="stat-label">Tapones</span></div>
-        <div><span class="stat-num">${s.mates}</span><span class="stat-label">Mates</span></div>
-        <div><span class="stat-num ${s.mm >= 0 ? "pos" : "neg"}">${s.mm > 0 ? "+" : ""}${s.mm}</span><span class="stat-label">+/-</span></div>
-        <div><span class="stat-num">${s.per}</span><span class="stat-label">Pérdidas</span></div>
-        <div><span class="stat-num">${s.tc}%</span><span class="stat-label">Tiros de campo</span></div>
-        <div><span class="stat-num">${s.t3}%</span><span class="stat-label">Triples</span></div>
-        <div><span class="stat-num">${s.tl}%</span><span class="stat-label">Tiros libres</span></div>
-      </div>
-      <p class="hazana"><span class="hazana-label">🏆 Hazaña</span>${jugador.hazana}</p>
-      <p class="modal-note">Medias por partido esta temporada (40 min por partido).</p>
-    </div>`;
-
-  overlay.classList.add("open");
-  document.getElementById("modal-jugador-close")?.focus();
+function statHTML(stats, [clave, etiqueta, sufijo = ""]) {
+  const valor = stats?.[clave];
+  if (valor === undefined) return "";
+  let clase = "stat-num";
+  let texto = `${valor}${sufijo}`;
+  if (clave === "mm") {
+    clase += valor >= 0 ? " pos" : " neg";
+    if (valor > 0) texto = `+${valor}`;
+  }
+  return `<div><span class="${clase}">${escaparHTML(texto)}</span><span class="stat-label">${etiqueta}</span></div>`;
 }
 
-function cerrarModalJugador() {
-  document.getElementById("modal-jugador")?.classList.remove("open");
+function fichaModalHTML(jugador, index) {
+  const hazanas = jugador.hazanas?.length
+    ? `<ul class="hazanas">${jugador.hazanas.map((h) => `<li>${escaparHTML(h)}</li>`).join("")}</ul>`
+    : "";
+  const hazana = jugador.hazana
+    ? `<p class="hazana"><span class="hazana-label">🏆 Hazaña</span>${escaparHTML(jugador.hazana)}</p>`
+    : "";
+
+  return `
+    <div class="modal-avatar">${avatarJugadorSVG(jugador, index)}</div>
+    <div class="modal-info">
+      <p class="kicker">${escaparHTML(jugador.posicion)} · ${escaparHTML(jugador.altura)}</p>
+      <p class="badges">${insigniasHTML(jugador)}</p>
+      <h2 id="modal-jugador-titulo">${escaparHTML(jugador.nombre)}</h2>
+      <p class="modal-bio">${escaparHTML(jugador.bio)}</p>
+      ${hazanas}
+      <div class="stats-grid">${STATS_JUGADOR.map((s) => statHTML(jugador.stats, s)).join("")}</div>
+      ${hazana}
+      <p class="modal-note">Medias por partido esta temporada (40 min por partido).</p>
+    </div>`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   const roster = document.getElementById("roster");
+  const overlay = document.getElementById("modal-jugador");
+  const cuerpo = document.getElementById("modal-jugador-body");
+  const btnCerrar = document.getElementById("modal-jugador-close");
   if (!roster) return;
 
   const ordenada = [...PLANTILLA].sort((a, b) => a.numero - b.numero);
@@ -57,30 +69,26 @@ document.addEventListener("DOMContentLoaded", () => {
   roster.innerHTML = ordenada
     .map(
       (j, i) => `
-      <button type="button" class="player" data-index="${i}">
+      <button type="button" class="player" data-index="${i}" aria-haspopup="dialog">
         <span class="player-avatar">${avatarJugadorSVG(j, i)}</span>
         <span class="num">${j.numero}</span>
-        <span class="name">${j.nombre}</span>
+        <span class="name">${escaparHTML(j.nombre)}</span>
         <span class="badges">${insigniasHTML(j)}</span>
-        <span class="pos">${j.posicion} · ${j.altura}</span>
-        <span class="stat">${j.dato}</span>
+        <span class="pos">${escaparHTML(j.posicion)} · ${escaparHTML(j.altura)}</span>
+        <span class="stat">${escaparHTML(j.dato)}</span>
       </button>`
     )
     .join("");
 
-  roster.querySelectorAll(".player").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const i = Number(btn.dataset.index);
-      abrirModalJugador(ordenada[i], i);
-    });
-  });
+  if (!overlay || !cuerpo) return;
+  const modal = crearPanelModal(overlay, { alAbrir: () => btnCerrar?.focus() });
 
-  const overlay = document.getElementById("modal-jugador");
-  document.getElementById("modal-jugador-close")?.addEventListener("click", cerrarModalJugador);
-  overlay?.addEventListener("click", (e) => {
-    if (e.target === overlay) cerrarModalJugador();
+  roster.addEventListener("click", (e) => {
+    const btn = e.target.closest(".player");
+    if (!btn) return;
+    const i = Number(btn.dataset.index);
+    cuerpo.innerHTML = fichaModalHTML(ordenada[i], i);
+    modal.abrir();
   });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") cerrarModalJugador();
-  });
+  btnCerrar?.addEventListener("click", modal.cerrar);
 });

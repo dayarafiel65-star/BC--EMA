@@ -5,13 +5,27 @@
 document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.querySelector(".navtoggle");
   const links = document.querySelector(".navlinks");
+
   if (toggle && links) {
-    toggle.addEventListener("click", () => {
-      const isOpen = links.classList.toggle("open");
-      toggle.setAttribute("aria-expanded", String(isOpen));
+    const setAbierto = (abierto) => {
+      links.classList.toggle("open", abierto);
+      toggle.setAttribute("aria-expanded", String(abierto));
+      toggle.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
+    };
+
+    toggle.addEventListener("click", () => setAbierto(!links.classList.contains("open")));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && links.classList.contains("open")) {
+        setAbierto(false);
+        toggle.focus();
+      }
+    });
+    window.matchMedia("(min-width: 761px)").addEventListener("change", (e) => {
+      if (e.matches) setAbierto(false);
     });
   }
 
-  const yearEl = document.querySelector("[data-year]");
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+  document.querySelectorAll("[data-year]").forEach((el) => {
+    el.textContent = new Date().getFullYear();
+  });
 });

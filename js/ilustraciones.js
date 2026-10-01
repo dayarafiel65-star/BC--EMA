@@ -9,7 +9,7 @@ const PALETA_JUGADORES = ["#f4a100", "#c1121f", "#3c5a80", "#e8890b"];
 function avatarJugadorSVG(jugador, index) {
   const color = PALETA_JUGADORES[index % PALETA_JUGADORES.length];
   return `
-  <svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustración de ${jugador.nombre}">
+  <svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustración de ${escaparHTML(jugador.nombre)}">
     <rect width="200" height="220" fill="#0d1b2a"/>
     <circle cx="168" cy="34" r="16" fill="none" stroke="${color}" stroke-width="1.4" opacity="0.65"/>
     <path d="M154 34h28M168 20v28M158 23c6 6 6 16 0 22M178 23c-6 6-6 16 0 22"

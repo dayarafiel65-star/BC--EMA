@@ -2,8 +2,6 @@
    ÑEMONES BASQUET CLUB — estilos
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
-
 :root {
   --bg: #0d1b2a;
   --bg-alt: #12263b;
@@ -50,6 +48,29 @@ p { color: var(--muted); max-width: 62ch; }
 
 a { color: inherit; }
 
+.kicker {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.8em;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 100;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 0.6em 1em;
+  border-radius: var(--radius);
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus { top: 1rem; }
+
+body.no-scroll { overflow: hidden; }
+
 img, svg { max-width: 100%; display: block; }
 
 .wrap {
@@ -90,6 +111,9 @@ img, svg { max-width: 100%; display: block; }
 }
 .btn.ghost:hover { border-color: var(--text); background: transparent; }
 
+.btn.block { width: 100%; justify-content: center; }
+.btn.icon { padding: 0.3em 0.7em; }
+
 .btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -125,7 +149,7 @@ img, svg { max-width: 100%; display: block; }
   font-size: 1.35rem;
   letter-spacing: 0.03em;
 }
-.brand .crest { width: 34px; height: 34px; }
+.brand .crest { width: 34px; height: 34px; color: var(--accent); }
 
 .navlinks {
   display: flex;
@@ -196,6 +220,7 @@ img, svg { max-width: 100%; display: block; }
   height: 100%;
   opacity: 0.5;
   pointer-events: none;
+  color: var(--accent);
 }
 
 .hero .wrap {
@@ -208,11 +233,9 @@ img, svg { max-width: 100%; display: block; }
   align-items: end;
 }
 
-.hero .kicker {
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-bottom: 0.8em;
+.hero.compact .wrap {
+  grid-template-columns: 1fr;
+  padding-bottom: 2.5rem;
 }
 
 .hero .actions {
@@ -228,6 +251,7 @@ img, svg { max-width: 100%; display: block; }
   border-radius: var(--radius);
   padding: 1.6rem;
 }
+.matchcard .kicker { margin-bottom: 0.3em; }
 .matchcard .vs {
   display: flex;
   align-items: baseline;
@@ -254,6 +278,7 @@ img, svg { max-width: 100%; display: block; }
 /* -------------------- secciones genéricas -------------------- */
 
 section { padding: clamp(2.6rem, 6vw, 4.5rem) 0; }
+section.tight { padding-top: 2.5rem; }
 section.alt { background: var(--bg-alt); border-top: 1px solid var(--panel-line); border-bottom: 1px solid var(--panel-line); }
 
 .sectionhead {
@@ -264,6 +289,28 @@ section.alt { background: var(--bg-alt); border-top: 1px solid var(--panel-line)
   margin-bottom: 2rem;
   flex-wrap: wrap;
 }
+
+/* -------------------- accesos rápidos (inicio) -------------------- */
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1px;
+  background: var(--panel-line);
+  border: 1px solid var(--panel-line);
+}
+
+.feature {
+  background: var(--bg);
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.feature-num { color: var(--accent); font-size: 0.88rem; }
+.feature h3 { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.15rem; margin: 0; }
+.feature p { margin: 0; font-size: 0.9rem; }
+.feature .btn { margin-top: auto; align-self: flex-start; }
 
 /* -------------------- jugadores -------------------- */
 
@@ -364,6 +411,9 @@ section.alt { background: var(--bg-alt); border-top: 1px solid var(--panel-line)
 }
 .modal-avatar { border-radius: var(--radius); overflow: hidden; align-self: start; }
 .modal-avatar svg { width: 100%; height: auto; display: block; }
+.modal-info .kicker { margin-bottom: 0.2em; }
+.modal-info .badges { margin: 0 0 0.4rem; }
+.modal-info h2 { margin-bottom: 0.1em; }
 .modal-bio { font-size: 0.92rem; margin: 0.6rem 0 1.2rem; }
 .modal-note { font-size: 0.78rem; margin: 0.8rem 0 0; }
 
@@ -507,6 +557,7 @@ section.alt { background: var(--bg-alt); border-top: 1px solid var(--panel-line)
 .cartitem .qty { color: var(--muted); }
 .cartitem button {
   background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.85rem;
+  min-width: 28px; min-height: 28px;
 }
 .cartitem button:hover { color: var(--accent-2); }
 .carttotal {
@@ -527,12 +578,12 @@ section.alt { background: var(--bg-alt); border-top: 1px solid var(--panel-line)
 
 .reservelayout {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: minmax(0, 1fr) 320px;
   gap: 2rem;
   align-items: start;
 }
 @media (max-width: 900px) {
-  .reservelayout { grid-template-columns: 1fr; }
+  .reservelayout { grid-template-columns: minmax(0, 1fr); }
 }
 
 .court-label {
@@ -557,11 +608,13 @@ section.alt { background: var(--bg-alt); border-top: 1px solid var(--panel-line)
 }
 .seccion-bloque h3 .preciotag { color: var(--accent); font-weight: 600; }
 
+.filas { overflow-x: auto; padding-bottom: 2px; }
+
 .fila {
   display: flex;
   gap: 5px;
-  justify-content: center;
-  margin-bottom: 5px;
+  width: max-content;
+  margin: 0 auto 5px;
 }
 
 .asiento {
@@ -589,8 +642,10 @@ section.alt { background: var(--bg-alt); border-top: 1px solid var(--panel-line)
   border-radius: var(--radius);
   padding: 1.4rem;
 }
+.resumen h3 { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.05rem; margin: 0; }
 .resumen ul { list-style: none; margin: 0.8rem 0; padding: 0; font-size: 0.9rem; }
 .resumen li { display: flex; justify-content: space-between; padding: 0.3rem 0; border-bottom: 1px solid var(--panel-line); }
+.resumen li.vacio { border: none; color: var(--muted); }
 .resumen .total { display: flex; justify-content: space-between; font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; margin: 0.8rem 0 1.1rem; }
 
 .field { margin-bottom: 0.9rem; }
